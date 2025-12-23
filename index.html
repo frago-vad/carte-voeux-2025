@@ -20,43 +20,73 @@
           Votre navigateur ne supporte pas la vidéo.
         </video>
 
-        <button
-          id="toggle"
-          class="toggle"
-          aria-label="Lecture / Pause"
-        >
-          ▶
-        </button>
+        <!-- Boutons -->
+        <div class="controls">
+          <button
+            id="togglePlay"
+            class="control-btn"
+            aria-label="Lecture / Pause"
+          >
+            ▶
+          </button>
+
+          <button
+            id="toggleMute"
+            class="control-btn"
+            aria-label="Mute / Unmute"
+          >
+            🔊
+          </button>
+        </div>
       </div>
     </div>
 
     <script>
       const video = document.getElementById("video");
-      const toggle = document.getElementById("toggle");
+      const playBtn = document.getElementById("togglePlay");
+      const muteBtn = document.getElementById("toggleMute");
 
-      function updateIcon() {
-        toggle.textContent = video.paused ? "▶" : "❚❚";
+      function updatePlayIcon() {
+        playBtn.textContent = video.paused ? "▶" : "❚❚";
       }
 
-      function togglePlay() {
+      function updateMuteIcon() {
+        muteBtn.textContent = video.muted ? "🔇" : "🔊";
+      }
+
+      playBtn.addEventListener("click", () => {
         if (video.paused) {
           video.play();
         } else {
           video.pause();
         }
-        updateIcon();
-      }
-
-      toggle.addEventListener("click", togglePlay);
-      video.addEventListener("click", togglePlay);
-      video.addEventListener("play", updateIcon);
-      video.addEventListener("pause", updateIcon);
-      video.addEventListener("ended", () => {
-        video.currentTime = 0;
-        updateIcon();
+        updatePlayIcon();
       });
 
-      updateIcon();
+      muteBtn.addEventListener("click", () => {
+        video.muted = !video.muted;
+        updateMuteIcon();
+      });
+
+      // Clic sur la vidéo = play / pause
+      video.addEventListener("click", () => {
+        if (video.paused) video.play();
+        else video.pause();
+        updatePlayIcon();
+      });
+
+      // À la fin : rester sur la dernière image
+      video.addEventListener("ended", () => {
+        video.pause();
+        updatePlayIcon();
+      });
+
+      video.addEventListener("play", updatePlayIcon);
+      video.addEventListener("pause", updatePlayIcon);
+
+      // État initial
+      updatePlayIcon();
+      updateMuteIcon();
     </script>
   </body>
 </html>
