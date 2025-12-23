@@ -30,7 +30,16 @@ body {
   background: #000;
 }
 
-/* Contrôles par défaut (desktop) */
+/* Zone de tap invisible */
+.tap-zone {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Contrôles */
 .controls {
   position: absolute;
   bottom: 14px;
@@ -38,6 +47,12 @@ body {
   transform: translateX(-50%);
   display: flex;
   gap: 12px;
+  transition: opacity 220ms ease;
+}
+
+.controls-hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .control-btn {
@@ -52,8 +67,18 @@ body {
   backdrop-filter: blur(8px);
 }
 
-/* 📱 Mobile portrait : boutons SOUS la vidéo */
+/* Hint rotation */
+.rotate-hint {
+  display: none;
+}
+
+/* 📱 Mobile portrait */
 @media (max-width: 600px) and (orientation: portrait) {
+  .tap-zone {
+    inset: 0 0 auto 0;
+    height: calc(100% - 76px);
+  }
+
   .controls {
     position: static;
     transform: none;
@@ -66,9 +91,17 @@ body {
     height: 54px;
     font-size: 22px;
   }
+
+  .rotate-hint {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    font: 600 13px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color: rgba(255, 255, 255, 0.75);
+  }
 }
 
-/* 📱 Mobile paysage : boutons petits, bas gauche */
+/* 📱 Mobile paysage */
 @media (max-width: 900px) and (orientation: landscape) {
   .wrap {
     padding: 0;
