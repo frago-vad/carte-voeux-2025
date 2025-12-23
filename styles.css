@@ -30,22 +30,22 @@ body {
   background: #000;
 }
 
-/* Zone de tap invisible (sur la vidéo uniquement) */
+/* Zone de tap invisible */
 .tap-zone {
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
-  aspect-ratio: 16 / 9; /* suit le cadre vidéo en desktop */
+  aspect-ratio: 16 / 9;
   border: 0;
   background: transparent;
   cursor: pointer;
 }
 
-/* Contrôles (sous la vidéo) */
+/* Contrôles sous la vidéo */
 .controls {
-  position: static;              /* ✅ plus en overlay */
-  margin-top: 12px;              /* ✅ sous la vidéo */
+  position: static;
+  margin-top: 12px;
   display: flex;
   justify-content: center;
   gap: 12px;
@@ -69,19 +69,13 @@ body {
   backdrop-filter: blur(8px);
 }
 
-/* Hint rotation : par défaut caché (donc desktop = pas de hint) */
+/* Hint rotation */
 .rotate-hint {
   display: none;
 }
 
-/* 📱 Mobile portrait : boutons déjà sous la vidéo + hint visible */
+/* 📱 Mobile portrait */
 @media (max-width: 600px) and (orientation: portrait) {
-  .tap-zone {
-    /* suit la vidéo, mais on laisse l'espace des boutons en dessous */
-    width: 100%;
-    aspect-ratio: 16 / 9;
-  }
-
   .control-btn {
     width: 54px;
     height: 54px;
@@ -95,9 +89,14 @@ body {
     font: 600 13px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     color: rgba(255, 255, 255, 0.75);
   }
+
+  /* Pas de fullscreen en portrait */
+  .fullscreen-btn {
+    display: none;
+  }
 }
 
-/* 📱 Mobile paysage : vidéo immersive + contrôles sous la vidéo (plus petits) */
+/* 📱 Mobile paysage — mode cinéma + fullscreen */
 @media (max-width: 900px) and (orientation: landscape) {
   .wrap {
     padding: 0;
@@ -106,25 +105,25 @@ body {
   .player {
     width: 100vw;
     max-width: none;
-    padding: 0 0 12px 0;
+    padding-bottom: 12px;
   }
 
   .video {
     width: 100vw;
     height: 100vh;
-    object-fit: cover; /* mode cinéma */
+    object-fit: cover;
     border-radius: 0;
   }
 
   .tap-zone {
     width: 100vw;
-    height: 100vh;     /* suit la vidéo en mode cinéma */
+    height: 100vh;
     aspect-ratio: auto;
   }
 
   .controls {
+    justify-content: flex-start;
     margin: 10px 12px 0;
-    justify-content: flex-start; /* bas gauche, mais sous la vidéo */
     gap: 8px;
   }
 
@@ -132,5 +131,17 @@ body {
     width: 42px;
     height: 42px;
     font-size: 18px;
+  }
+
+  /* Fullscreen visible uniquement ici */
+  .fullscreen-btn {
+    display: inline-flex;
+  }
+}
+
+/* 🖥 Desktop : pas de bouton fullscreen */
+@media (min-width: 901px) {
+  .fullscreen-btn {
+    display: none;
   }
 }
