@@ -15,7 +15,16 @@
           Votre navigateur ne supporte pas la vidéo.
         </video>
 
-        <div class="controls">
+        <!-- Zone de tap invisible -->
+        <button
+          id="tapZone"
+          class="tap-zone"
+          type="button"
+          aria-label="Lecture / Pause"
+        ></button>
+
+        <!-- Contrôles -->
+        <div id="controls" class="controls">
           <button id="togglePlay" class="control-btn" aria-label="Lecture / Pause">
             ▶
           </button>
@@ -24,6 +33,10 @@
             🔊
           </button>
         </div>
+
+        <div class="rotate-hint" aria-hidden="true">
+          Tournez votre téléphone
+        </div>
       </div>
     </div>
 
@@ -31,6 +44,11 @@
       const video = document.getElementById("video");
       const playBtn = document.getElementById("togglePlay");
       const muteBtn = document.getElementById("toggleMute");
+      const tapZone = document.getElementById("tapZone");
+      const controls = document.getElementById("controls");
+
+      const isMobile = window.matchMedia("(max-width: 900px)").matches;
+      let hideTimer = null;
 
       function updatePlayIcon() {
         playBtn.textContent = video.paused ? "▶" : "❚❚";
@@ -40,35 +58,61 @@
         muteBtn.textContent = video.muted ? "🔇" : "🔊";
       }
 
-      playBtn.addEventListener("click", () => {
-        if (video.paused) video.play();
-        else video.pause();
+      function togglePlay() {
+        video.paused ? video.play() : video.pause();
         updatePlayIcon();
-      });
+        showControls();
+      }
+
+      function showControls() {
+        controls.classList.remove("controls-hidden");
+        clearTimeout(hideTimer);
+
+        // Fade après 2s UNIQUEMENT quand la vidéo joue
+        if (!video.paused) {
+          hideTimer = setTimeout(() => {
+            controls.classList.add("controls-hidden");
+          }, 2000);
+        }
+      }
+
+      playBtn.addEventListener("click", togglePlay);
 
       muteBtn.addEventListener("click", () => {
         video.muted = !video.muted;
         updateMuteIcon();
+        showControls();
       });
 
-      // Clic sur la vidéo = play/pause
-      video.addEventListener("click", () => {
-        if (video.paused) video.play();
-        else video.pause();
-        updatePlayIcon();
+      tapZone.addEventListener("click", togglePlay);
+
+      // Desktop : mouvement souris = réafficher
+      document.addEventListener("mousemove", () => {
+        if (!isMobile) showControls();
       });
 
-      // Fin = rester sur la dernière image (pas de repeat)
+      // Mobile : touch = réafficher
+      document.addEventListener("touchstart", () => {
+        if (isMobile) showControls();
+      }, { passive: true });
+
+      video.addEventListener("play", showControls);
+
+      video.addEventListener("pause", () => {
+        controls.classList.remove("controls-hidden");
+        clearTimeout(hideTimer);
+      });
+
+      // 🔑 FIN DE VIDÉO : boutons visibles
       video.addEventListener("ended", () => {
-        video.pause();
+        controls.classList.remove("controls-hidden");
         updatePlayIcon();
+        clearTimeout(hideTimer);
       });
-
-      video.addEventListener("play", updatePlayIcon);
-      video.addEventListener("pause", updatePlayIcon);
 
       updatePlayIcon();
       updateMuteIcon();
+      showControls();
     </script>
   </body>
 </html>
