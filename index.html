@@ -10,31 +10,17 @@
   <body>
     <div class="wrap">
       <div class="player">
-        <video
-          id="video"
-          class="video"
-          playsinline
-          preload="metadata"
-        >
+        <video id="video" class="video" playsinline preload="metadata">
           <source src="./voeux.mp4" type="video/mp4" />
           Votre navigateur ne supporte pas la vidéo.
         </video>
 
-        <!-- Boutons -->
         <div class="controls">
-          <button
-            id="togglePlay"
-            class="control-btn"
-            aria-label="Lecture / Pause"
-          >
+          <button id="togglePlay" class="control-btn" aria-label="Lecture / Pause">
             ▶
           </button>
 
-          <button
-            id="toggleMute"
-            class="control-btn"
-            aria-label="Mute / Unmute"
-          >
+          <button id="toggleMute" class="control-btn" aria-label="Mute / Unmute">
             🔊
           </button>
         </div>
@@ -55,11 +41,8 @@
       }
 
       playBtn.addEventListener("click", () => {
-        if (video.paused) {
-          video.play();
-        } else {
-          video.pause();
-        }
+        if (video.paused) video.play();
+        else video.pause();
         updatePlayIcon();
       });
 
@@ -68,14 +51,14 @@
         updateMuteIcon();
       });
 
-      // Clic sur la vidéo = play / pause
+      // Clic sur la vidéo = play/pause
       video.addEventListener("click", () => {
         if (video.paused) video.play();
         else video.pause();
         updatePlayIcon();
       });
 
-      // À la fin : rester sur la dernière image
+      // Fin = rester sur la dernière image (pas de repeat)
       video.addEventListener("ended", () => {
         video.pause();
         updatePlayIcon();
@@ -84,7 +67,6 @@
       video.addEventListener("play", updatePlayIcon);
       video.addEventListener("pause", updatePlayIcon);
 
-      // État initial
       updatePlayIcon();
       updateMuteIcon();
     </script>
