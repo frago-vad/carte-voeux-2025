@@ -69,12 +69,12 @@ body {
   backdrop-filter: blur(8px);
 }
 
-/* Hint rotation */
+/* Hint rotation (caché par défaut => desktop = rien) */
 .rotate-hint {
   display: none;
 }
 
-/* 📱 Mobile portrait */
+/* 📱 Mobile portrait : hint visible, pas de fullscreen */
 @media (max-width: 600px) and (orientation: portrait) {
   .control-btn {
     width: 54px;
@@ -90,13 +90,12 @@ body {
     color: rgba(255, 255, 255, 0.75);
   }
 
-  /* Pas de fullscreen en portrait */
   .fullscreen-btn {
     display: none;
   }
 }
 
-/* 📱 Mobile paysage — mode cinéma + fullscreen */
+/* 📱 Mobile paysage : affichage "paysage" propre (sans rognage) + bouton fullscreen mis en avant */
 @media (max-width: 900px) and (orientation: landscape) {
   .wrap {
     padding: 0;
@@ -105,26 +104,30 @@ body {
   .player {
     width: 100vw;
     max-width: none;
-    padding-bottom: 12px;
+    padding: 10px 12px 12px;
   }
 
+  /* Vidéo en 16:9, centrée, et qui tient dans la hauteur disponible */
   .video {
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-    border-radius: 0;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: contain; /* ✅ pas de recadrage */
+    border-radius: 12px;
   }
 
+  /* Tap zone = sur le cadre vidéo seulement (pas sur les boutons) */
   .tap-zone {
-    width: 100vw;
-    height: 100vh;
-    aspect-ratio: auto;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
   }
 
+  /* Contrôles sous la vidéo, à gauche */
   .controls {
     justify-content: flex-start;
-    margin: 10px 12px 0;
-    gap: 8px;
+    margin-top: 10px;
+    gap: 10px;
   }
 
   .control-btn {
@@ -133,9 +136,16 @@ body {
     font-size: 18px;
   }
 
-  /* Fullscreen visible uniquement ici */
+  /* ✅ Bouton fullscreen MIS EN ÉVIDENCE */
   .fullscreen-btn {
     display: inline-flex;
+    width: 52px;
+    height: 52px;
+    font-size: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
   }
 }
 
