@@ -72,7 +72,7 @@ body {
   display: none;
 }
 
-/* 📱 Mobile portrait */
+/* 📱 Mobile portrait : boutons sous la vidéo */
 @media (max-width: 600px) and (orientation: portrait) {
   .tap-zone {
     inset: 0 0 auto 0;
@@ -101,7 +101,7 @@ body {
   }
 }
 
-/* 📱 Mobile paysage */
+/* 📱 Mobile paysage — MODE CINÉMA 🔥 */
 @media (max-width: 900px) and (orientation: landscape) {
   .wrap {
     padding: 0;
@@ -109,13 +109,14 @@ body {
 
   .player {
     width: 100vw;
+    height: 100vh;
     max-width: none;
   }
 
   .video {
     width: 100vw;
-    height: auto;
-    aspect-ratio: 16 / 9;
+    height: 100vh;
+    object-fit: cover;   /* 🔥 remplit l’écran horizontalement */
     border-radius: 0;
   }
 
