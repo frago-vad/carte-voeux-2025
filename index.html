@@ -9,13 +9,13 @@
 
   <body>
     <div class="wrap">
-      <div class="player">
+      <div class="player" id="player">
         <video id="video" class="video" playsinline preload="metadata">
           <source src="./voeux.mp4" type="video/mp4" />
           Votre navigateur ne supporte pas la vidéo.
         </video>
 
-        <!-- Zone de tap invisible (uniquement sur la zone vidéo) -->
+        <!-- Zone de tap invisible -->
         <button
           id="tapZone"
           class="tap-zone"
@@ -23,7 +23,7 @@
           aria-label="Lecture / Pause"
         ></button>
 
-        <!-- Contrôles (sous la vidéo) -->
+        <!-- Contrôles -->
         <div id="controls" class="controls">
           <button id="togglePlay" class="control-btn" aria-label="Lecture / Pause">
             ▶
@@ -32,17 +32,28 @@
           <button id="toggleMute" class="control-btn" aria-label="Mute / Unmute">
             🔊
           </button>
+
+          <!-- Plein écran (mobile paysage uniquement via CSS) -->
+          <button
+            id="toggleFullscreen"
+            class="control-btn fullscreen-btn"
+            aria-label="Plein écran"
+          >
+            ⛶
+          </button>
         </div>
 
-        <!-- Hint (mobile portrait uniquement via CSS) -->
+        <!-- Hint mobile portrait uniquement -->
         <div class="rotate-hint" aria-hidden="true">Tournez votre téléphone</div>
       </div>
     </div>
 
     <script>
       const video = document.getElementById("video");
+      const player = document.getElementById("player");
       const playBtn = document.getElementById("togglePlay");
       const muteBtn = document.getElementById("toggleMute");
+      const fsBtn = document.getElementById("toggleFullscreen");
       const tapZone = document.getElementById("tapZone");
       const controls = document.getElementById("controls");
 
@@ -56,7 +67,6 @@
         muteBtn.textContent = video.muted ? "🔇" : "🔊";
       }
 
-      // Fade après 2s UNIQUEMENT suite à une action sur un bouton
       function fadeControlsAfterUse() {
         controls.classList.remove("controls-hidden");
         clearTimeout(hideTimer);
@@ -72,6 +82,7 @@
       }
 
       playBtn.addEventListener("click", togglePlay);
+      tapZone.addEventListener("click", togglePlay);
 
       muteBtn.addEventListener("click", () => {
         video.muted = !video.muted;
@@ -79,16 +90,33 @@
         fadeControlsAfterUse();
       });
 
-      // Tap sur la vidéo = play/pause (et lance le fade)
-      tapZone.addEventListener("click", togglePlay);
+      // ----- Plein écran -----
+      fsBtn.addEventListener("click", async () => {
+        try {
+          if (!document.fullscreenElement) {
+            await player.requestFullscreen();
+          } else {
+            await document.exitFullscreen();
+          }
+          fadeControlsAfterUse();
+        } catch (e) {
+          console.log("Fullscreen non supporté", e);
+        }
+      });
 
-      // Si la vidéo est en pause, on garde les boutons visibles
+      // Sortie du plein écran → contrôles visibles
+      document.addEventListener("fullscreenchange", () => {
+        controls.classList.remove("controls-hidden");
+        clearTimeout(hideTimer);
+      });
+
+      // Pause = contrôles visibles
       video.addEventListener("pause", () => {
         controls.classList.remove("controls-hidden");
         clearTimeout(hideTimer);
       });
 
-      // Fin de vidéo : boutons visibles, rester sur la dernière image
+      // Fin de vidéo = contrôles visibles
       video.addEventListener("ended", () => {
         controls.classList.remove("controls-hidden");
         updatePlayIcon();
@@ -99,7 +127,6 @@
 
       updatePlayIcon();
       updateMuteIcon();
-      // On ne lance pas de fade au chargement
     </script>
   </body>
 </html>
