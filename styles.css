@@ -30,22 +30,24 @@ body {
   background: #000;
 }
 
-/* Zone de tap invisible */
+/* Zone de tap invisible (sur la vidéo uniquement) */
 .tap-zone {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
+  width: 100%;
+  aspect-ratio: 16 / 9; /* suit le cadre vidéo en desktop */
   border: 0;
   background: transparent;
   cursor: pointer;
 }
 
-/* Contrôles */
+/* Contrôles (sous la vidéo) */
 .controls {
-  position: absolute;
-  bottom: 14px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: static;              /* ✅ plus en overlay */
+  margin-top: 12px;              /* ✅ sous la vidéo */
   display: flex;
+  justify-content: center;
   gap: 12px;
   transition: opacity 220ms ease;
 }
@@ -67,23 +69,17 @@ body {
   backdrop-filter: blur(8px);
 }
 
-/* Hint rotation */
+/* Hint rotation : par défaut caché (donc desktop = pas de hint) */
 .rotate-hint {
   display: none;
 }
 
-/* 📱 Mobile portrait : boutons sous la vidéo */
+/* 📱 Mobile portrait : boutons déjà sous la vidéo + hint visible */
 @media (max-width: 600px) and (orientation: portrait) {
   .tap-zone {
-    inset: 0 0 auto 0;
-    height: calc(100% - 76px);
-  }
-
-  .controls {
-    position: static;
-    transform: none;
-    margin-top: 12px;
-    justify-content: center;
+    /* suit la vidéo, mais on laisse l'espace des boutons en dessous */
+    width: 100%;
+    aspect-ratio: 16 / 9;
   }
 
   .control-btn {
@@ -101,7 +97,7 @@ body {
   }
 }
 
-/* 📱 Mobile paysage — MODE CINÉMA 🔥 */
+/* 📱 Mobile paysage : vidéo immersive + contrôles sous la vidéo (plus petits) */
 @media (max-width: 900px) and (orientation: landscape) {
   .wrap {
     padding: 0;
@@ -109,21 +105,26 @@ body {
 
   .player {
     width: 100vw;
-    height: 100vh;
     max-width: none;
+    padding: 0 0 12px 0;
   }
 
   .video {
     width: 100vw;
     height: 100vh;
-    object-fit: cover;   /* 🔥 remplit l’écran horizontalement */
+    object-fit: cover; /* mode cinéma */
     border-radius: 0;
   }
 
+  .tap-zone {
+    width: 100vw;
+    height: 100vh;     /* suit la vidéo en mode cinéma */
+    aspect-ratio: auto;
+  }
+
   .controls {
-    left: 12px;
-    bottom: 12px;
-    transform: none;
+    margin: 10px 12px 0;
+    justify-content: flex-start; /* bas gauche, mais sous la vidéo */
     gap: 8px;
   }
 
