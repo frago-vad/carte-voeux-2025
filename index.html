@@ -68,7 +68,6 @@
         controls.classList.remove("controls-hidden");
         clearTimeout(hideTimer);
 
-        // Fade après 2s UNIQUEMENT quand la vidéo joue
         if (!video.paused) {
           hideTimer = setTimeout(() => {
             controls.classList.add("controls-hidden");
@@ -86,15 +85,17 @@
 
       tapZone.addEventListener("click", togglePlay);
 
-      // Desktop : mouvement souris = réafficher
       document.addEventListener("mousemove", () => {
         if (!isMobile) showControls();
       });
 
-      // Mobile : touch = réafficher
-      document.addEventListener("touchstart", () => {
-        if (isMobile) showControls();
-      }, { passive: true });
+      document.addEventListener(
+        "touchstart",
+        () => {
+          if (isMobile) showControls();
+        },
+        { passive: true }
+      );
 
       video.addEventListener("play", showControls);
 
@@ -103,7 +104,7 @@
         clearTimeout(hideTimer);
       });
 
-      // 🔑 FIN DE VIDÉO : boutons visibles
+      // 🔑 Fin de vidéo → contrôles visibles
       video.addEventListener("ended", () => {
         controls.classList.remove("controls-hidden");
         updatePlayIcon();
