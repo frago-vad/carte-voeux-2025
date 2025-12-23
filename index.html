@@ -15,7 +15,7 @@
           Votre navigateur ne supporte pas la vidéo.
         </video>
 
-        <!-- Zone de tap invisible -->
+        <!-- Zone de tap invisible (uniquement sur la zone vidéo) -->
         <button
           id="tapZone"
           class="tap-zone"
@@ -23,7 +23,7 @@
           aria-label="Lecture / Pause"
         ></button>
 
-        <!-- Contrôles -->
+        <!-- Contrôles (sous la vidéo) -->
         <div id="controls" class="controls">
           <button id="togglePlay" class="control-btn" aria-label="Lecture / Pause">
             ▶
@@ -34,9 +34,8 @@
           </button>
         </div>
 
-        <div class="rotate-hint" aria-hidden="true">
-          Tournez votre téléphone
-        </div>
+        <!-- Hint (mobile portrait uniquement via CSS) -->
+        <div class="rotate-hint" aria-hidden="true">Tournez votre téléphone</div>
       </div>
     </div>
 
@@ -47,7 +46,6 @@
       const tapZone = document.getElementById("tapZone");
       const controls = document.getElementById("controls");
 
-      const isMobile = window.matchMedia("(max-width: 900px)").matches;
       let hideTimer = null;
 
       function updatePlayIcon() {
@@ -58,21 +56,19 @@
         muteBtn.textContent = video.muted ? "🔇" : "🔊";
       }
 
+      // Fade après 2s UNIQUEMENT suite à une action sur un bouton
+      function fadeControlsAfterUse() {
+        controls.classList.remove("controls-hidden");
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => {
+          controls.classList.add("controls-hidden");
+        }, 2000);
+      }
+
       function togglePlay() {
         video.paused ? video.play() : video.pause();
         updatePlayIcon();
-        showControls();
-      }
-
-      function showControls() {
-        controls.classList.remove("controls-hidden");
-        clearTimeout(hideTimer);
-
-        if (!video.paused) {
-          hideTimer = setTimeout(() => {
-            controls.classList.add("controls-hidden");
-          }, 2000);
-        }
+        fadeControlsAfterUse();
       }
 
       playBtn.addEventListener("click", togglePlay);
@@ -80,40 +76,30 @@
       muteBtn.addEventListener("click", () => {
         video.muted = !video.muted;
         updateMuteIcon();
-        showControls();
+        fadeControlsAfterUse();
       });
 
+      // Tap sur la vidéo = play/pause (et lance le fade)
       tapZone.addEventListener("click", togglePlay);
 
-      document.addEventListener("mousemove", () => {
-        if (!isMobile) showControls();
-      });
-
-      document.addEventListener(
-        "touchstart",
-        () => {
-          if (isMobile) showControls();
-        },
-        { passive: true }
-      );
-
-      video.addEventListener("play", showControls);
-
+      // Si la vidéo est en pause, on garde les boutons visibles
       video.addEventListener("pause", () => {
         controls.classList.remove("controls-hidden");
         clearTimeout(hideTimer);
       });
 
-      // 🔑 Fin de vidéo → contrôles visibles
+      // Fin de vidéo : boutons visibles, rester sur la dernière image
       video.addEventListener("ended", () => {
         controls.classList.remove("controls-hidden");
         updatePlayIcon();
         clearTimeout(hideTimer);
       });
 
+      video.addEventListener("play", updatePlayIcon);
+
       updatePlayIcon();
       updateMuteIcon();
-      showControls();
+      // On ne lance pas de fade au chargement
     </script>
   </body>
 </html>
