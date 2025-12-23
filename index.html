@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vœux</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+
+  <body>
+    <div class="wrap">
+      <div class="player">
+        <video
+          id="video"
+          class="video"
+          playsinline
+          preload="metadata"
+        >
+          <source src="./voeux.mp4" type="video/mp4" />
+          Votre navigateur ne supporte pas la vidéo.
+        </video>
+
+        <button
+          id="toggle"
+          class="toggle"
+          aria-label="Lecture / Pause"
+        >
+          ▶
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const video = document.getElementById("video");
+      const toggle = document.getElementById("toggle");
+
+      function updateIcon() {
+        toggle.textContent = video.paused ? "▶" : "❚❚";
+      }
+
+      function togglePlay() {
+        if (video.paused) {
+          video.play();
+        } else {
+          video.pause();
+        }
+        updateIcon();
+      }
+
+      toggle.addEventListener("click", togglePlay);
+      video.addEventListener("click", togglePlay);
+      video.addEventListener("play", updateIcon);
+      video.addEventListener("pause", updateIcon);
+      video.addEventListener("ended", () => {
+        video.currentTime = 0;
+        updateIcon();
+      });
+
+      updateIcon();
+    </script>
+  </body>
+</html>
