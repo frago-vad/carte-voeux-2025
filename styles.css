@@ -30,7 +30,7 @@ body {
   background: #000;
 }
 
-/* Contrôles */
+/* Contrôles par défaut (desktop) */
 .controls {
   position: absolute;
   bottom: 14px;
@@ -52,23 +52,26 @@ body {
   backdrop-filter: blur(8px);
 }
 
-.control-btn:hover {
-  background: rgba(0, 0, 0, 0.7);
-}
+/* 📱 Mobile portrait : boutons SOUS la vidéo */
+@media (max-width: 600px) and (orientation: portrait) {
+  .controls {
+    position: static;
+    transform: none;
+    margin-top: 12px;
+    justify-content: center;
+  }
 
-@media (max-width: 420px) {
   .control-btn {
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
+    width: 54px;
+    height: 54px;
+    font-size: 22px;
   }
 }
 
-/* 📱 Mobile en paysage uniquement */
+/* 📱 Mobile paysage : boutons petits, bas gauche */
 @media (max-width: 900px) and (orientation: landscape) {
   .wrap {
     padding: 0;
-    place-items: center;
   }
 
   .player {
@@ -78,12 +81,21 @@ body {
 
   .video {
     width: 100vw;
-    height: auto;              /* hauteur calculée depuis la largeur */
-    aspect-ratio: 16 / 9;      /* garde le bon ratio */
-    border-radius: 0;          /* plus immersif en paysage */
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border-radius: 0;
   }
 
   .controls {
+    left: 12px;
     bottom: 12px;
+    transform: none;
+    gap: 8px;
+  }
+
+  .control-btn {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
   }
 }
