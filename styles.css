@@ -30,7 +30,7 @@ body {
   background: #000;
 }
 
-/* Barre de contrôles */
+/* Contrôles */
 .controls {
   position: absolute;
   bottom: 14px;
@@ -40,7 +40,6 @@ body {
   gap: 12px;
 }
 
-/* Boutons */
 .control-btn {
   width: 56px;
   height: 56px;
@@ -65,49 +64,26 @@ body {
   }
 }
 
-/* ✅ Adaptation mobile (CSS only) */
-@media (max-width: 600px) {
+/* 📱 Mobile en paysage uniquement */
+@media (max-width: 900px) and (orientation: landscape) {
   .wrap {
-    padding: 10px;
-    place-items: start; /* évite un gros espace vide en haut sur petits écrans */
+    padding: 0;
+    place-items: center;
   }
 
   .player {
-    width: 100%;
-    margin-top: 12px;
+    width: 100vw;
+    max-width: none;
   }
 
-  /* Vidéo plus haute sur mobile (meilleure présence visuelle).
-     Si ta vidéo est horizontale classique, tu peux laisser 16/9.
-     Si elle est verticale ou si tu veux un rendu plus "mobile", 4/5 est souvent top. */
   .video {
-    aspect-ratio: 4 / 5;   /* <- change en 16/9 si tu préfères */
-    border-radius: 12px;
+    width: 100vw;
+    height: auto;              /* hauteur calculée depuis la largeur */
+    aspect-ratio: 16 / 9;      /* garde le bon ratio */
+    border-radius: 0;          /* plus immersif en paysage */
   }
 
-  /* Contrôles plus faciles à toucher */
   .controls {
-    bottom: 10px;
-    gap: 10px;
-  }
-
-  .control-btn {
-    width: 54px;
-    height: 54px;
-    font-size: 22px;
+    bottom: 12px;
   }
 }
-
-/* Très petits écrans */
-@media (max-width: 380px) {
-  .video {
-    border-radius: 10px;
-  }
-
-  .control-btn {
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
-  }
-}
-
